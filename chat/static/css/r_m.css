@@ -8,6 +8,10 @@
     background-color: #efefef;
 }
 
+.pageJeep{
+    text-align: center;
+}
+
 #bg{
     background: url("/static/img/bgc.jpg");
     height: 120px;

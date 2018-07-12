@@ -391,7 +391,7 @@ p.copy a{
 p.copy a:hover{
     text-decoration:none;
 }
-
+a:hover {text-transform:uppercase;font-size: 20px;}
 /*--meadia quiries start here--*/
 @media (max-width:1024px){
 p.copy {

@@ -242,7 +242,7 @@ def admire_badnum_views(request):
             Article.objects.filter(id=bad_id).update(benotadmired_num=bad_content) 
             if isAdd=='1':
                 Admirelog.objects.create(uid_id=uid,aid_id=bad_id,isGood=False,isFile=False)#,fid_id=-1
-                n = Notification(aim_user=user1, arg0=7,arg1=good_id,arg4=user)
+                n = Notification(aim_user=user1, arg0=7,arg1=bad_id,arg4=user)
                 n.save()
             else:
                 Admirelog.objects.get(isGood=False,uid_id=uid,aid_id=bad_id).delete()#,fid_id=-1
@@ -282,7 +282,7 @@ def check_email(request):
     return HttpResponse(json.dumps(str1))
 def check_name1(request):
     username1 = request.GET.get("username")
-    user=User.objects.get(username=username1)
+    user=User.objects.filter(username=username1)
     if user:
         str1 = "<font color='green'>username is available</font>"
     elif username1=='':

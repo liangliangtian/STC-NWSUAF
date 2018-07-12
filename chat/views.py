@@ -190,6 +190,9 @@ def read_my_views(request):
         return HttpResponseRedirect('/')
 
 def read_sb_views(request,id):
+    if request.session.get('username'):
+        login_uname=request.session.get('username')
+        user=User.objects.get(username=login_uname)
     u=User.objects.get(id=id)
     listArticle=Article.objects.filter(user_id=id).order_by("-id")
     page_now = request.GET.get('page')
@@ -395,10 +398,6 @@ def add_reply_views(request,rid):
     else:
         messages.error(request,'请登录!')
         return HttpResponseRedirect('/')
-
-# def add_like_views(request,uid,aid):
-#     u=User.objects.get(id=uid)
-#     a=Article.objects.get(id=aid) 
 
 
 import os

@@ -151,22 +151,17 @@ def upload_file2(request,collegename):
         return HttpResponseRedirect('/login')
 
 @login_required
-#download files
 def download_files(request,fileid):  
     file=File.objects.get(id=fileid)
     file_name = file.file_name
-    print(fileid)
-    print(file_name)
     File.objects.filter(id=fileid).update(file_bedown=F('file_bedown')+1) #更改被下载次数
     file_path = os.path.join('share','upload',file_name) 
     file=open(file_path,'rb')  
     response = StreamingHttpResponse(file)  
     response['Content-Type']='application/octet-stream'  
     response['Content-Disposition'] = "attachment; filename*=utf-8''{}".format(escape_uri_path(file_name))
-    # response['Content-Disposition'] ='attachment;filename="%s"' % (urlquote(file_name))
     return response
 @login_required
-#delete files
 def delete_files(request,fileid):
     file=File.objects.get(id=fileid)
     File.objects.get(id=fileid).delete()   

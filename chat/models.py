@@ -56,12 +56,4 @@ class Reply(models.Model):
         verbose_name = '评论回复表'
         verbose_name_plural = verbose_name
 
-class Like(models.Model):
-    create_date=models.DateTimeField(default=datetime.now)
-    user=models.ForeignKey(User)
-    article=models.ForeignKey(Article)
-    def __str__(self):
-        return self.create_date.strftime("%Y-%m-%d-%H")  
-    class Meta:
-        verbose_name = '赞表'
-        verbose_name_plural = verbose_name
+

@@ -3,7 +3,8 @@
     clear:both;
     float: left;
     width:95%;
-    height: 1200px;
+    height: 100%;
+    margin-bottom: 100px;
     background:url(/static/img/abg.jpg) no-repeat;
     background-size: 100% 145px;
     background-color: #f3f3f3;
@@ -18,6 +19,7 @@
 #top{
     clear: both;
     height: 50px;
+    width: 850px;
     margin-top: 95px;
     margin-left:200px;
 }
@@ -48,7 +50,7 @@
 
 
 #lab{
-    width:50px;
+    width:80px;
     font-size: 16px;
     color: #0084ff;
     background-color: #d9edff; 
@@ -59,6 +61,7 @@
 #cont{
     background-color: #f6f6f6;
     border-radius: 20px;
+    width: 850px;
 }
 
 #rev{
