@@ -91,8 +91,8 @@ def good_detail_views(request,good_id):
         if username:
             user = User.objects.get(username=username)
         good = Good.objects.get(id=good_id)
-        goods = Good.objects.filter(isfile=True).order_by('sell_times')
-        goods = goods[1:6]
+        goods = Good.objects.filter(isfile=True).order_by('-sell_times')
+        goods = goods[1:5]
         remark_date = GoodRemark.objects.filter(good=good.id)
         if good.isfile == True:
             remark = GoodRemark.objects.filter(good = good.id).order_by('-create_time')
@@ -152,6 +152,11 @@ def ordering_views(request, good_id):
     if request.method == 'GET':
         good = Good.objects.get(id=good_id)
         user = User.objects.get(username=request.session['username'])
+        order_id = request.GET.get("orderid")
+        if order_id:
+            order = Order.objects.filter(good_id = good_id).filter(creator_id = user.id)        
+            order = Order.objects.get(id = order_id)
+            return redirect(reverse('paying', args=(order.id,)))
         order = Order.objects.filter(good_id = good_id).filter(creator_id = user.id)
         return render(request, 'ordering.html', locals())
     else:
@@ -175,8 +180,8 @@ def new_order_views(request, good_id):
             good = Good.objects.get(id=good_id)
             user = User.objects.get(username=request.session['username'])
             order = Order.objects.filter(good_id = good_id).filter(creator = user.id)
-            print(order)
-        if good.isfile == True or len(order)==0:
+            order_sta = Order.objects.filter(good_id = good_id).filter(~Q(status=4))
+        if good.isfile == True or len(order)==0 or not order_sta:
             if good.creator == user:
                 messages.warning(request, '不允许购买自己发布的商品')
                 return render(request, 'ordering.html', locals())
@@ -301,7 +306,7 @@ def order_views(request,orderstate):
         if not page_now:
             page_now = 1
         page_now = int(page_now)
-        per_page = 4
+        per_page = 8
         page_sum = len(order_list)//per_page+1
         if page_sum > 6:
             page_sum = len(order_list)//per_page
@@ -435,8 +440,9 @@ def seller_ok_views(request, order_id):
 
 
         #消息处理
-        send_ok = Notification(aim_user=buyer, arg0=20, arg1=order_id, arg4=buyer,content="文件已发放至您的网盘中")
-        send_ok.save()
+        if file:
+            send_ok = Notification(aim_user=buyer, arg0=20, arg1=order_id, arg4=buyer,content="文件已发放至您的网盘中")
+            send_ok.save()
         n = Notification(aim_user=buyer, arg0=3, arg1=order_id, arg4=user)
         n.save()
         return redirect(reverse('paying', args=(order.id,)))
@@ -479,8 +485,9 @@ def good_list_views(request):
         username=request.session['username']
         user=User.objects.get(username=username)
         page_now = request.GET.get('page')
-        good_user = User.objects.get(username=username) 
-        goods = good_user.goods.all().order_by('-create_time') 
+        good_user = User.objects.get(username=username)
+        goods = Good.objects.filter(creator = good_user.id)
+        print(goods) 
         if not page_now:
             page_now = 1
         page_now = int(page_now)
@@ -532,7 +539,7 @@ def comment_views(request,good_id):
             order = Order.objects.get(id = order)
             status = order.status
             isfile = good.isfile
-        return render(request, 'comment_order.html', locals())
+        return redirect(reverse('comment_order', args=(order.id,)))
 @login_required
 def trade_mark_views(request, order_id):
     if request.method == 'POST':
@@ -653,6 +660,17 @@ def cancel_fb_views(request, feedback_id):
             feedback.save()
             order.status = 2
             order.save()
+            good = order.good
+            good.sell_times += 1
+            good.save()
+            
+            buyer = order.creator
+            buyer.trade_count += 1
+            buyer.save()
+
+            seller = good.creator
+            seller.trade_count += 1
+            seller.save()
 
         return redirect(reverse('paying', args=(order.id,)))    
     
@@ -683,7 +701,7 @@ def comment_order_views(request,order):
         remark = GoodRemark.objects.filter(creator = user.id,good = order.good.id)
         if remark:
             remark = GoodRemark.objects.get(creator = user.id,good = order.good.id)
-        if remark:
+        if remark and order.status == 2:
             comment_status = 1 
         status = order.status
         isfile = order.good.isfile

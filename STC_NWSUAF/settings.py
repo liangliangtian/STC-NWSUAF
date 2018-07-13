@@ -144,7 +144,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'mywebsite/static/')
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = '1441335655@qq.com'
-EMAIL_HOST_PASSWORD = 'safzedxylexqggdh'
+EMAIL_HOST_USER = '1070296285@qq.com'
+EMAIL_HOST_PASSWORD = 'xacfujjpxwexbdgj'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

@@ -110,7 +110,7 @@ def index_reset(request):
             user=User.objects.get(username=username)
             password=user.password
             password=password.replace('pbkdf2_sha256$36000$','a')
-            send_mail("找回密码", "亲爱的用户"+username+'请点击此链接来修改你的密码,http://172.29.7.228:8000/back/reset?str1='+password+'&user='+username, "1441335655@qq.com", [user.email], fail_silently=False)
+            send_mail("找回密码", "亲爱的用户"+username+'请点击此链接来修改你的密码,http://172.29.7.228:8000/back/reset?str1='+password+'&user='+username, "1070296285@qq.com", [user.email], fail_silently=False)
             messages.info(request,'请查看你的邮箱') 
             return HttpResponseRedirect('/')
     else:
