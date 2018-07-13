@@ -92,7 +92,6 @@ def good_detail_views(request,good_id):
             user = User.objects.get(username=username)
         good = Good.objects.get(id=good_id)
         goods = Good.objects.filter(isfile=True).order_by('sell_times')
-        print(goods)
         goods = goods[1:6]
         remark_date = GoodRemark.objects.filter(good=good.id)
         if good.isfile == True:
@@ -106,7 +105,11 @@ def good_detail_views(request,good_id):
                         g_num += 1
                     else:
                         b_num += 1
-                    date = (g_num/(g_num+b_num))*100
+                date = (g_num/(g_num+b_num))*100
+                if g_num == 0:
+                    date = 0
+            else:
+                date = 0
             comment = []
             for i in remark:
                 x = 1
